@@ -1,6 +1,22 @@
+import { useEffect, useState } from "react";
 import "../style.css";
 
 const Temprature = () => {
+  const [searchValue, setSearchValue] = useState("Jabalpur");
+
+  const getWeatherInfo = async () => {
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&appid=452fd341c764d795438a4bd03a6f3f4e`;
+      const res = await fetch(url);
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <>
       {/* Search Bar */}
@@ -12,8 +28,14 @@ const Temprature = () => {
             autoFocus
             id="search"
             className="searchTerm"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
-          <button className="searchButton" type="button">
+          <button
+            className="searchButton"
+            type="button"
+            onClick={getWeatherInfo}
+          >
             Search
           </button>
         </div>
