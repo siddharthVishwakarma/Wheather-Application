@@ -1,15 +1,34 @@
 import { useEffect, useState } from "react";
 import "../style.css";
+import MainCard from "./MainCard";
 
 const Temprature = () => {
   const [searchValue, setSearchValue] = useState("Jabalpur");
+  const [tempInfo, setTempInfo] = useState({});
 
   const getWeatherInfo = async () => {
     try {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&appid=452fd341c764d795438a4bd03a6f3f4e`;
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&units=metric&appid=452fd341c764d795438a4bd03a6f3f4e`;
       const res = await fetch(url);
       const data = await res.json();
-      console.log(data);
+      const { temp, humidity, pressure } = data.main;
+      const { main: weathermood } = data.weather[0];
+      const { name } = data;
+      const { speed } = data.wind;
+      const { country, sunset } = data.sys;
+
+      const myWeatherInfo = {
+        temp,
+        humidity,
+        pressure,
+        weathermood,
+        name,
+        speed,
+        country,
+        sunset,
+      };
+
+      setTempInfo(myWeatherInfo);
     } catch (error) {
       console.log(error);
     }
@@ -41,64 +60,7 @@ const Temprature = () => {
         </div>
       </div>
       {/* Main Card */}
-      <article className="widget">
-        <div className="weatherIcon">
-          <i className={"wi wi-day-sunny"}></i>
-        </div>
-        <div className="weatherInfo">
-          <div className="temperature">
-            <span>25.5&deg;</span>
-          </div>
-          <div className="description">
-            <div className="weatherCondition">Sunny</div>
-            <div className="place">Pune, Maharastra</div>
-          </div>
-        </div>
-        <div className="date">{new Date().toLocaleString()}</div>
-        {/* Section */}
-        <div className="extra-temp">
-          <div className="temp-info-minmax">
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-sunset"}></i>
-              </p>
-              <p className="extra-info-leftside">
-                13:43 PM <br />
-                Sunset
-              </p>
-            </div>
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-humidity"}></i>
-              </p>
-              <p className="extra-info-leftside">
-                13:43 PM <br />
-                humidity
-              </p>
-            </div>
-          </div>
-          <div className="weather-extra-info">
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-humidity"}></i>
-              </p>
-              <p className="extra-info-leftside">
-                13:43 PM <br />
-                humidity
-              </p>
-            </div>
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-humidity"}></i>
-              </p>
-              <p className="extra-info-leftside">
-                13:43 PM <br />
-                humidity
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
+      <MainCard tempInfo={tempInfo} />
     </>
   );
 };
